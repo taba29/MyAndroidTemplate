@@ -3,6 +3,8 @@ package com.mutsumonji.feature_commentviewer
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +28,10 @@ fun CommentViewerScreen(
             Text("Add test comment")
         }
 
-        comments.forEach { c ->
-            Text("• $c")
+        LazyColumn {
+            items(comments) { c ->
+                Text("• $c")
+            }
         }
     }
 }
