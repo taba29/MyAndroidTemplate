@@ -61,6 +61,8 @@ dependencies {
     implementation(project(":core-network"))
     implementation(project(":core-storage"))
 
+    implementation("androidx.activity:activity-compose:1.9.0")
+
     // ★ Compose 依存（これが無いと Unresolved reference: compose/Text/Composable になる）
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

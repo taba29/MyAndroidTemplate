@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -34,6 +34,7 @@ fun CommentViewerScreen(
     onDisconnect: () -> Unit,
     onSend: () -> Unit,
     onAddTest: () -> Unit,
+    onImportTxt: () -> Unit,
 ) {
     val canSend = (wsState == WsState.Connected) && sendText.isNotBlank()
 
@@ -52,7 +53,7 @@ fun CommentViewerScreen(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             label = { Text("WebSocket URL") },
-            placeholder = { Text("wss://echo.websocket.org") }
+            placeholder = { Text("ws://10.0.2.2:8080") }
         )
 
         Spacer(Modifier.height(8.dp))
@@ -65,16 +66,13 @@ fun CommentViewerScreen(
                 onClick = onConnect,
                 modifier = Modifier.weight(1f),
                 enabled = wsState != WsState.Connecting
-            ) {
-                Text("Connect")
-            }
+            ) { Text("Connect") }
 
             OutlinedButton(
                 onClick = onDisconnect,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Disconnect")
-            }
+                modifier = Modifier.weight(1f),
+                enabled = wsState != WsState.Disconnected
+            ) { Text("Disconnect") }
         }
 
         Spacer(Modifier.height(10.dp))
@@ -94,22 +92,24 @@ fun CommentViewerScreen(
             onClick = onSend,
             modifier = Modifier.fillMaxWidth(),
             enabled = canSend
-        ) {
-            Text("Send")
-        }
+        ) { Text("Send") }
 
         Spacer(Modifier.height(8.dp))
 
         OutlinedButton(
             onClick = onAddTest,
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Add test comment")
-        }
+        ) { Text("Add test comment") }
+
+        Spacer(Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = onImportTxt,
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Import TXT") }
 
         Spacer(Modifier.height(12.dp))
-
-        Divider()
+        HorizontalDivider()
         Spacer(Modifier.height(8.dp))
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
