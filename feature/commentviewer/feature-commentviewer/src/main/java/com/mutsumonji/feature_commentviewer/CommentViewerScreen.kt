@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CommentViewerScreen(
+    wsState: WsState,
+
     url: String,
     onUrlChange: (String) -> Unit,
 
@@ -33,10 +35,14 @@ fun CommentViewerScreen(
     onSend: () -> Unit,
     onAddTest: () -> Unit,
 ) {
+    val canSend = (wsState == WsState.Connected) && sendText.isNotBlank()
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         Text("Comment Viewer")
+        Spacer(Modifier.height(8.dp))
+        Text("Status: $wsState")
 
         Spacer(Modifier.height(12.dp))
 
@@ -57,7 +63,8 @@ fun CommentViewerScreen(
         ) {
             Button(
                 onClick = onConnect,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                enabled = wsState != WsState.Connecting
             ) {
                 Text("Connect")
             }
@@ -70,9 +77,8 @@ fun CommentViewerScreen(
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(10.dp))
 
-        // ===== 送信UI =====
         OutlinedTextField(
             value = sendText,
             onValueChange = onSendTextChange,
@@ -86,7 +92,8 @@ fun CommentViewerScreen(
 
         Button(
             onClick = onSend,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = canSend
         ) {
             Text("Send")
         }

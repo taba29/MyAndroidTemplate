@@ -13,11 +13,14 @@ fun CommentViewerRoute(
     vm: CommentViewerViewModel = viewModel()
 ) {
     val comments by vm.comments.collectAsState()
+    val wsState by vm.wsState.collectAsState()
 
     var url by rememberSaveable { mutableStateOf("wss://echo.websocket.org") }
     var sendText by rememberSaveable { mutableStateOf("") }
 
     CommentViewerScreen(
+        wsState = wsState,
+
         url = url,
         onUrlChange = { url = it },
 
@@ -29,7 +32,7 @@ fun CommentViewerRoute(
         onDisconnect = { vm.disconnectWebSocket() },
         onSend = {
             vm.send(sendText)
-            sendText = "" // 送ったらクリア（好みで消してOK）
+            sendText = ""
         },
         onAddTest = { vm.addComment("追加テスト: ${System.currentTimeMillis()}") }
     )
