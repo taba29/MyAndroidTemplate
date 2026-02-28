@@ -46,6 +46,36 @@ flowchart LR
 ```
 
 ---
+🔗 データ統合アーキテクチャ（I/Oブリッジ）
+flowchart LR
+subgraph External[外部データソース]
+TXT[TXTログ<br/>(SAF)]
+WS[WebSocket<br/>(Server)]
+YT[YouTube Live<br/>(予定)]
+end
+
+subgraph Core[Core Layer]
+STORAGE[core/storage<br/>TextFileReader]
+NETWORK[core/network<br/>WebSocketClient]
+DATA[core/data<br/>Room / DataStore<br/>(予定)]
+end
+
+subgraph Feature[Feature Layer]
+VM2[ViewModel<br/>StateFlow<br/>データ統合ハブ]
+end
+
+subgraph UI[UI Layer]
+SCREEN[LazyColumn<br/>コメント一覧]
+end
+
+TXT --> STORAGE --> VM2
+WS --> NETWORK --> VM2
+YT -.-> NETWORK
+
+VM2 --> SCREEN
+VM2 --> DATA
+
+---
 
 ## 📊 対応データソース
 
