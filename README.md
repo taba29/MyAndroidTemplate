@@ -1,23 +1,171 @@
-## CommentViewer 母艦 v0.1
 
-### 実装済み
-- SAF による TXT ファイル読み込み（Import TXT）
-- WebSocket 接続 / 送信 / 受信（OkHttp）
-- ViewModel + StateFlow によるコメント一覧表示
-- LazyColumn でリアルタイム更新
+---
 
-### 動作確認
+# 📦 CommentViewer 母艦 v0.1
+
+配信コメントビューアの母艦アプリ。
+TXTログ再生と WebSocket リアルタイムコメントを統合表示する基盤。
+
+---
+
+## 🧱 アーキテクチャ概要
+
+```mermaid
+flowchart TB
+  app[apps/app-commentviewer\n(起動エントリ)] --> feature[feature/commentviewer\n(Screen + ViewModel)]
+  feature --> net[core/network\n(OkHttp WebSocket)]
+  feature --> storage[core/storage\n(SAF + TextFileReader)]
+  feature --> ui[core/ui\n(Theme)]
+  feature --> data[core/data\n(将来用)]
+```
+
+### アーキテクチャ方針
+
+* UI とデータ取得ロジックを分離（MVVM）
+* WebSocket / SAF を core レイヤに隔離
+* ViewModel は StateFlow で単方向データフローを提供
+* 将来の YouTube / OBS 連携を考慮した拡張可能設計
+
+---
+
+## 🔄 データ統合フロー
+
+TXTログと WebSocket を単一ストリームとして UI に反映。
+
+```mermaid
+flowchart LR
+  txt[TXTログ\n(SAF)] --> VM[ViewModel\n(StateFlow)]
+  ws[WebSocket\n(core/network)] --> VM
+  VM --> UI[LazyColumn\nコメント一覧]
+```
+
+---
+
+## 📡 WebSocket フロー
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as Screen
+  participant VM as ViewModel
+  participant WS as WebSocketClient
+  participant S as WS Server
+
+  U->>UI: Connect
+  UI->>VM: connect(url)
+  VM->>WS: connect(url)
+  WS->>S: handshake
+  S-->>WS: connected
+  WS-->>VM: onOpen()
+  VM-->>UI: state=Connected
+
+  S-->>WS: message(text)
+  WS-->>VM: onMessage(text)
+  VM-->>UI: コメント追加
+
+  U->>UI: Send
+  UI->>VM: send(text)
+  VM->>WS: send(text)
+```
+
+---
+
+## 📂 SAF TXT 読み込みフロー
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as Screen
+  participant VM as ViewModel
+  participant SAF as Android SAF
+  participant R as TextFileReader
+
+  U->>UI: Import TXT
+  UI->>SAF: OpenDocument()
+  SAF-->>UI: Uri
+  UI->>VM: onImport(uri)
+  VM->>R: readText(context, uri)
+  R-->>VM: text
+  VM-->>UI: コメント一覧更新
+```
+
+---
+
+## 📊 接続状態（WsState）
+
+```mermaid
+stateDiagram-v2
+  [*] --> Disconnected
+  Disconnected --> Connecting : connect()
+  Connecting --> Connected : onOpen()
+  Connecting --> Error : onFailure()
+  Connected --> Disconnected : disconnect()
+```
+
+---
+
+##  実装済み
+
+* SAF による TXT ファイル読み込み（Import TXT）
+* WebSocket 接続 / 送信 / 受信（OkHttp）
+* ViewModel + StateFlow によるコメント一覧表示
+* LazyColumn でリアルタイム更新
+
+---
+
+##  動作確認
+
 1. アプリ起動
-2. Import TXT → ファイル選択 → 内容がコメント一覧に表示
-3. WebSocket Connect → メッセージ受信で一覧に追加
-4. Send ボタンで送信可能
+2. **Import TXT** → ファイル選択 → 内容がコメント一覧に表示
+3. **WebSocket Connect** → メッセージ受信で一覧に追加
+4. **Send** ボタンで送信可能
 
-### モジュール構成
-- `core/network` : WebSocket クライアント雛形
-- `core/storage` : SAF + TextFileReader
-- `feature/commentviewer` : Screen + ViewModel
-- `apps/app-commentviewer` : 起動エントリ
+---
 
-### 目的
-配信コメントビューア母艦として  
-TXTログ再生 + リアルタイムコメント統合 を行う基盤
+##  モジュール構成
+
+* `core/network` : WebSocket クライアント雛形
+* `core/storage` : SAF + TextFileReader
+* `core/ui` : 共通Theme
+* `core/data` : 将来用データ層
+* `feature/commentviewer` : Screen + ViewModel
+* `apps/app-commentviewer` : 起動エントリ
+
+---
+
+##  現在の制限
+
+* コメントの永続化は未実装（メモリ保持のみ）
+* WebSocket 再接続ロジックは簡易版
+* 大量ログ時の仮想化最適化は未対応
+
+---
+
+##  今後の予定
+
+* YouTube Live Chat 連携
+* コメントのローカル保存（Room / DataStore）
+* OBS オーバーレイ出力
+* 接続状態の UI 表示強化
+
+---
+
+##  セットアップ
+
+1. リポジトリをクローン
+2. Run 構成を `app-commentviewer` に設定
+3. Android Emulator 起動
+4. ローカル WebSocket サーバを起動
+
+### ローカル WebSocket テストサーバ
+
+* `ws://10.0.2.2:8080`（Android Emulator から接続）
+
+---
+
+##  目的
+
+配信コメントビューア母艦として
+TXTログ再生 + リアルタイムコメント統合 を行う基盤。
+
+---
