@@ -1,10 +1,16 @@
 
+
 ---
 
 # 📦 CommentViewer 母艦 v0.1
 
 配信コメントビューアの母艦アプリ。
 TXTログ再生と WebSocket リアルタイムコメントを統合表示する基盤。
+
+```diff
++ WebSocket テストURLはエミュレータ用（ws://10.0.2.2:8080）
+
+```
 
 ---
 
@@ -38,6 +44,17 @@ flowchart LR
   ws["WebSocket<br/>(core/network)"] --> VM
   VM --> UI["LazyColumn<br/>コメント一覧"]
 ```
+
+---
+
+## 📊 対応データソース
+
+| ソース          | 状態 | 実装                  |
+| ------------ | -- | ------------------- |
+| TXTログ        | ✅  | SAF                 |
+| WebSocket    | ✅  | OkHttp              |
+| YouTube Live | ⏳  | 予定                  |
+| 永続化          | ⏳  | Room / DataStore 予定 |
 
 ---
 
@@ -104,25 +121,7 @@ stateDiagram-v2
 
 ---
 
-##  実装済み
-
-* SAF による TXT ファイル読み込み（Import TXT）
-* WebSocket 接続 / 送信 / 受信（OkHttp）
-* ViewModel + StateFlow によるコメント一覧表示
-* LazyColumn でリアルタイム更新
-
----
-
-##  動作確認
-
-1. アプリ起動
-2. **Import TXT** → ファイル選択 → 内容がコメント一覧に表示
-3. **WebSocket Connect** → メッセージ受信で一覧に追加
-4. **Send** ボタンで送信可能
-
----
-
-##  モジュール構成
+## 🧩 モジュール構成
 
 * `core/network` : WebSocket クライアント雛形
 * `core/storage` : SAF + TextFileReader
@@ -133,7 +132,25 @@ stateDiagram-v2
 
 ---
 
-##  現在の制限
+## ✅ 実装済み
+
+* SAF による TXT ファイル読み込み（Import TXT）
+* WebSocket 接続 / 送信 / 受信（OkHttp）
+* ViewModel + StateFlow によるコメント一覧表示
+* LazyColumn でリアルタイム更新
+
+---
+
+## 🧪 動作確認
+
+1. アプリ起動
+2. **Import TXT** → ファイル選択 → 内容がコメント一覧に表示
+3. **WebSocket Connect** → メッセージ受信で一覧に追加
+4. **Send** ボタンで送信可能
+
+---
+
+## ⚠️ 現在の制限
 
 * コメントの永続化は未実装（メモリ保持のみ）
 * WebSocket 再接続ロジックは簡易版
@@ -141,7 +158,7 @@ stateDiagram-v2
 
 ---
 
-##  今後の予定
+## 🗺️ 今後の予定
 
 * YouTube Live Chat 連携
 * コメントのローカル保存（Room / DataStore）
@@ -150,7 +167,7 @@ stateDiagram-v2
 
 ---
 
-##  セットアップ
+## 🛠️ セットアップ
 
 1. リポジトリをクローン
 2. Run 構成を `app-commentviewer` に設定
@@ -159,11 +176,22 @@ stateDiagram-v2
 
 ### ローカル WebSocket テストサーバ
 
-* `ws://10.0.2.2:8080`（Android Emulator から接続）
+```text
+ws://10.0.2.2:8080
+```
 
 ---
 
-##  目的
+## 🔗 参考リンク
+
+* [Android SAF ドキュメント](https://developer.android.com/training/data-storage/shared/documents-files)
+* [OkHttp WebSocket](https://square.github.io/okhttp/)
+* [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow)
+* [LazyColumn](https://developer.android.com/jetpack/compose/lists)
+
+---
+
+## 🎯 目的
 
 配信コメントビューア母艦として
 TXTログ再生 + リアルタイムコメント統合 を行う基盤。
