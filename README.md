@@ -12,11 +12,11 @@ TXTログ再生と WebSocket リアルタイムコメントを統合表示する
 
 ```mermaid
 flowchart TB
-  app[apps/app-commentviewer\n(起動エントリ)] --> feature[feature/commentviewer\n(Screen + ViewModel)]
-  feature --> net[core/network\n(OkHttp WebSocket)]
-  feature --> storage[core/storage\n(SAF + TextFileReader)]
-  feature --> ui[core/ui\n(Theme)]
-  feature --> data[core/data\n(将来用)]
+  app["apps/app-commentviewer<br/>(起動エントリ)"] --> feature["feature/commentviewer<br/>(Screen + ViewModel)"]
+  feature --> net["core/network<br/>(OkHttp WebSocket)"]
+  feature --> storage["core/storage<br/>(SAF + TextFileReader)"]
+  feature --> ui["core/ui<br/>(Theme)"]
+  feature --> data["core/data<br/>(将来用)"]
 ```
 
 ### アーキテクチャ方針
@@ -34,9 +34,9 @@ TXTログと WebSocket を単一ストリームとして UI に反映。
 
 ```mermaid
 flowchart LR
-  txt[TXTログ\n(SAF)] --> VM[ViewModel\n(StateFlow)]
-  ws[WebSocket\n(core/network)] --> VM
-  VM --> UI[LazyColumn\nコメント一覧]
+  txt["TXTログ<br/>(SAF)"] --> VM["ViewModel<br/>(StateFlow)"]
+  ws["WebSocket<br/>(core/network)"] --> VM
+  VM --> UI["LazyColumn<br/>コメント一覧"]
 ```
 
 ---
