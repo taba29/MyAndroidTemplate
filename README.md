@@ -47,33 +47,36 @@ flowchart LR
 
 ---
 🔗 データ統合アーキテクチャ（I/Oブリッジ）
+## 🔗 データ統合アーキテクチャ（I/Oブリッジ）
+
+```mermaid
 flowchart LR
-subgraph External
-TXT["TXT Log (SAF)"]
-WS["WebSocket Server"]
-YT["YouTube Live (planned)"]
-end
+  subgraph External
+    TXT["TXT Log (SAF)"]
+    WS["WebSocket Server"]
+    YT["YouTube Live (planned)"]
+  end
 
-subgraph Core
-STORAGE["core/storage\nTextFileReader"]
-NETWORK["core/network\nWebSocketClient"]
-DATA["core/data\nRoom / DataStore (planned)"]
-end
+  subgraph Core
+    STORAGE["core/storage\nTextFileReader"]
+    NETWORK["core/network\nWebSocketClient"]
+    DATA["core/data\nRoom / DataStore (planned)"]
+  end
 
-subgraph Feature
-VM["ViewModel\nStateFlow\nIntegration Hub"]
-end
+  subgraph Feature
+    VM["ViewModel\nStateFlow\nIntegration Hub"]
+  end
 
-subgraph UI
-SCREEN["LazyColumn\nComment List"]
-end
+  subgraph UI
+    SCREEN["LazyColumn\nComment List"]
+  end
 
-TXT --> STORAGE --> VM
-WS --> NETWORK --> VM
-YT -.-> NETWORK
+  TXT --> STORAGE --> VM
+  WS --> NETWORK --> VM
+  YT -.-> NETWORK
 
-VM --> SCREEN
-VM --> DATA
+  VM --> SCREEN
+  VM --> DATA
 ---
 
 ## 📊 対応データソース
