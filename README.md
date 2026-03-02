@@ -46,7 +46,7 @@ flowchart LR
 ```
 
 ---
-```md
+
 ## 🔗 データ統合アーキテクチャ（I/Oブリッジ）
 
 ```mermaid
