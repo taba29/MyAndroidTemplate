@@ -77,6 +77,7 @@ flowchart LR
 
   VM --> SCREEN
   VM --> DATA
+  ```
 ---
 
 ## 📊 対応データソース
