@@ -64,10 +64,31 @@ flowchart TB
 TXTログと WebSocket を単一ストリームとして UI に反映。
 
 ```mermaid
+%%{init: {
+  "theme": "neutral",
+  "themeVariables": {
+    "background": "#ffffff",
+    "fontFamily": "Arial",
+    "primaryTextColor": "#111111",
+    "lineColor": "#444444"
+  }
+}}%%
 flowchart LR
   txt["TXTログ<br/>(SAF)"] --> VM["ViewModel<br/>(StateFlow)"]
   ws["WebSocket<br/>(core/network)"] --> VM
   VM --> UI["LazyColumn<br/>コメント一覧"]
+
+  classDef sourceTxt fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#111111;
+  classDef sourceWs fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#111111;
+  classDef vmClass fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#111111;
+  classDef uiClass fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#111111;
+
+  class txt sourceTxt;
+  class ws sourceWs;
+  class VM vmClass;
+  class UI uiClass;
+
+  linkStyle default stroke:#444444,stroke-width:2px;
 ```
 
 ---
@@ -75,33 +96,62 @@ flowchart LR
 ## 🔗 データ統合アーキテクチャ（I/Oブリッジ）
 
 ```mermaid
+%%{init: {
+  "theme": "neutral",
+  "themeVariables": {
+    "background": "#ffffff",
+    "fontFamily": "Arial",
+    "primaryTextColor": "#111111",
+    "lineColor": "#555555"
+  }
+}}%%
 flowchart LR
   subgraph External
-    TXT["TXT Log (SAF)"]
+    TXT["TXT Log<br/>(SAF)"]
     WS["WebSocket Server"]
-    YT["YouTube Live (planned)"]
+    YT["YouTube Live<br/>(planned)"]
   end
 
   subgraph Core
-    STORAGE["core/storage\nTextFileReader"]
-    NETWORK["core/network\nWebSocketClient"]
-    DATA["core/data\nRoom / DataStore (planned)"]
+    STORAGE["core/storage<br/>TextFileReader"]
+    NETWORK["core/network<br/>WebSocketClient"]
+    DATA["core/data<br/>Room / DataStore<br/>(planned)"]
   end
 
   subgraph Feature
-    VM["ViewModel\nStateFlow\nIntegration Hub"]
+    VM["ViewModel<br/>StateFlow<br/>Integration Hub"]
   end
 
   subgraph UI
-    SCREEN["LazyColumn\nComment List"]
+    SCREEN["LazyColumn<br/>Comment List"]
   end
 
   TXT --> STORAGE --> VM
   WS --> NETWORK --> VM
   YT -.-> NETWORK
-
   VM --> SCREEN
   VM --> DATA
+
+  classDef extClass fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#111111;
+  classDef storageClass fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#111111;
+  classDef networkClass fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#111111;
+  classDef dataClass fill:#cffafe,stroke:#0891b2,stroke-width:2px,color:#111111;
+  classDef vmClass fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#111111;
+  classDef uiClass fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#111111;
+
+  class TXT,WS,YT extClass;
+  class STORAGE storageClass;
+  class NETWORK networkClass;
+  class DATA dataClass;
+  class VM vmClass;
+  class SCREEN uiClass;
+
+  style External fill:#fafafa,stroke:#9ca3af,stroke-width:2px
+  style Core fill:#fff7ed,stroke:#c2410c,stroke-width:2px
+  style Feature fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+  style UI fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+
+  linkStyle default stroke:#555555,stroke-width:2px;
   ```
 ---
 
