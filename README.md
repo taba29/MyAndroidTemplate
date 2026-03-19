@@ -17,12 +17,37 @@ TXTログ再生と WebSocket リアルタイムコメントを統合表示する
 ## 🧱 アーキテクチャ概要
 
 ```mermaid
+%%{init: {
+  "theme": "neutral",
+  "themeVariables": {
+    "background": "#ffffff",
+    "fontFamily": "Arial",
+    "primaryTextColor": "#111111",
+    "lineColor": "#555555"
+  }
+}}%%
 flowchart TB
   app["apps/app-commentviewer<br/>(起動エントリ)"] --> feature["feature/commentviewer<br/>(Screen + ViewModel)"]
   feature --> net["core/network<br/>(OkHttp WebSocket)"]
   feature --> storage["core/storage<br/>(SAF + TextFileReader)"]
   feature --> ui["core/ui<br/>(Theme)"]
   feature --> data["core/data<br/>(将来用)"]
+
+  classDef appClass fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#111111;
+  classDef featureClass fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#111111;
+  classDef networkClass fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#111111;
+  classDef storageClass fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#111111;
+  classDef uiClass fill:#e9d5ff,stroke:#7c3aed,stroke-width:2px,color:#111111;
+  classDef dataClass fill:#cffafe,stroke:#0891b2,stroke-width:2px,color:#111111;
+
+  class app appClass;
+  class feature featureClass;
+  class net networkClass;
+  class storage storageClass;
+  class ui uiClass;
+  class data dataClass;
+
+  linkStyle default stroke:#555555,stroke-width:2px;
 ```
 
 ### アーキテクチャ方針
